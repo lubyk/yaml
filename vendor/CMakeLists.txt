@@ -1,15 +1,32 @@
-
-# ----------------------------------------------------------------------------------
-#  [lubyk]
-# ----------------------------------------------------------------------------------
+# --------------------------------------------------------------
+#  yaml_vendor
+#  
+#  expects:
+#    MODULE_NAME defined in the CMakeLists for the module
+#
+#  provides:
+#    yaml/vendor.so
+# --------------------------------------------------------------
+set(target "${MODULE_NAME}_vendor")
 
 include_directories(src)
+file(GLOB CORE_SOURCES src/*.c)
 
-file(GLOB SUB_MODULE_SOURCES src/*.c)
-build_sub_module("vendor" ${SUB_MODULE_SOURCES})
+add_library(${target} MODULE ${CORE_SOURCES})
+set_target_properties(${target}
+  PROPERTIES OUTPUT_NAME vendor
+  LINK_FLAGS ${PLAT_OBJ_FLAGS}
+  PREFIX ""
+  SUFFIX ".so"
+)  
+
+add_dependencies(${MODULE_NAME} ${target})
+
+# --------------------------------------------------------------
+#  install                                     
+# --------------------------------------------------------------
+install(TARGETS ${target}
+  DESTINATION lib/lubyk/${MODULE_NAME}
+)
 
 # The file lyaml.c has been edited to fix a float parsing bug
-
-# ----------------------------------------------------------------------------------
-#  [/lubyk]
-# ----------------------------------------------------------------------------------
