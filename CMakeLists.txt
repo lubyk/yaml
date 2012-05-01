@@ -21,7 +21,7 @@ add_subdirectory(vendor)
 # --------------------------------------------------------------
 #  install                                     
 # --------------------------------------------------------------
-install(DIRECTORY lubyk
-  DESTINATION lib
-)                                  
+install(DIRECTORY lib
+  DESTINATION ${LUBYK_LIB}
+)
 
