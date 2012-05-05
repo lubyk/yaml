@@ -15,7 +15,7 @@ function should.auto_load()
 end
 
 function should.load_hash()
-  local simple = yaml.load(fixture.readall('simple.yml'))
+  local simple = yaml.load(fixture.readAll('simple.yml'))
   assertEqual('hello', simple.hash.a)
   assertEqual('lubyk', simple.hash.b)
 end
@@ -27,7 +27,7 @@ function should.load_number()
 end
 
 function should.load_list()
-  local simple = yaml.load(fixture.readall('simple.yml'))
+  local simple = yaml.load(fixture.readAll('simple.yml'))
   assertEqual('first',  simple.list[1])
   assertEqual('second', simple.list[2])
 end
@@ -39,7 +39,7 @@ function should.load_path()
 end
 
 function should.use_refs_as_same_obj()
-  local refs = yaml.load(fixture.readall('refs.yml'))
+  local refs = yaml.load(fixture.readAll('refs.yml'))
   assertEqual('Jane',  refs.roles.boss.name)
   -- same obj
   assertTrue(refs.roles.wife == refs.roles.boss)
