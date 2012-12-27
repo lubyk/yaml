@@ -15,6 +15,12 @@ file(GLOB SOURCES src/*.c)
 if(MODULES_STATIC)
   set(target "${MODULE_NAME}_static")
   add_library(${target} ${SOURCES})
+  # --------------------------------------------------------------
+  #  .a
+  # --------------------------------------------------------------
+  install(TARGETS ${target}
+    DESTINATION ${MODULES_STATIC}
+  )
 else(MODULES_STATIC)
   set(target "${MODULE_NAME}_vendor")
   add_library(${target} MODULE ${SOURCES})
