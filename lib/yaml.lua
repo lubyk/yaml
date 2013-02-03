@@ -10,5 +10,6 @@ yaml = Autoload('yaml')
 require 'yaml.vendor'
 
 function yaml.loadpath(path)
-  return yaml.load(lk.readAll(path))
+  lk.deprecation('yaml', 'loadpath', 'yaml.load(lk.content(path))')
+  return yaml.load(lk.content(path))
 end

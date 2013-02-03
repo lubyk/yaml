@@ -11,35 +11,35 @@ require 'lubyk'
 local should = test.Suite('yaml')
 
 function should.auto_load()
-  assertTrue(yaml.loadpath)
+  assertTrue(yaml.load)
 end
 
 function should.load_hash()
-  local simple = yaml.load(fixture.readAll('simple.yml'))
+  local simple = yaml.load(fixture.content('simple.yml'))
   assertEqual('hello', simple.hash.a)
   assertEqual('lubyk', simple.hash.b)
 end
 
 function should.load_number()
-  local simple = yaml.loadpath(fixture.path('simple.yml'))
+  local simple = yaml.load(fixture.content('simple.yml'))
   assertEqual(0.5, simple.number.a)
   assertEqual(3, simple.number.b)
 end
 
 function should.load_list()
-  local simple = yaml.load(fixture.readAll('simple.yml'))
+  local simple = yaml.load(fixture.content('simple.yml'))
   assertEqual('first',  simple.list[1])
   assertEqual('second', simple.list[2])
 end
 
 function should.load_path()
-  local simple = yaml.loadpath(fixture.path('simple.yml'))
+  local simple = yaml.load(fixture.content('simple.yml'))
   assertEqual('first',  simple.list[1])
   assertEqual('second', simple.list[2])
 end
 
 function should.use_refs_as_same_obj()
-  local refs = yaml.load(fixture.readAll('refs.yml'))
+  local refs = yaml.load(fixture.content('refs.yml'))
   assertEqual('Jane',  refs.roles.boss.name)
   -- same obj
   assertTrue(refs.roles.wife == refs.roles.boss)
