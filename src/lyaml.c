@@ -50,6 +50,12 @@ static char Load_Nulls_As_Nil = 0;
 #define LUAYAML_KIND_SEQUENCE 1
 #define LUAYAML_KIND_MAPPING 2
 
+#if LUA_VERSION_NUM > 501
+#define COMPAT_GETN luaL_len
+#else
+#define COMPAT_GETN luaL_getn
+#endif
+
 #define RETURN_ERRMSG(s, msg) do { \
       lua_pushstring(s->L, msg); \
       s->error = 1; \
@@ -506,7 +512,11 @@ static int dump_table(struct lua_yaml_dumper *dumper) {
 }
 
 static int dump_array(struct lua_yaml_dumper *dumper) {
+#if LUA_VERSION_NUM > 501
+   int i, n = luaL_len(dumper->L, -1);
+#else
    int i, n = luaL_getn(dumper->L, -1);
+#endif
    yaml_event_t ev;
    yaml_char_t *anchor = get_yaml_anchor(dumper);
 
@@ -569,7 +579,12 @@ static int dump_node(struct lua_yaml_dumper *dumper) {
          type = figure_table_type(dumper->L);
 
       if (type == LUAYAML_KIND_UNKNOWN && Dump_Auto_Array &&
+#if LUA_VERSION_NUM > 501
+          luaL_len(dumper->L, -1) > 0) {
+#else
           luaL_getn(dumper->L, -1) > 0) {
+#endif
+
          type = LUAYAML_KIND_SEQUENCE;
       }
 
