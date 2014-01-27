@@ -1,4 +1,5 @@
-require 'lubyk'
+local lub = require 'lub'
+local lut = require 'lut'
 
-test.files(lk.scriptDir(), '%_test.lua$')
+lut.Test.files(lub.path '|')
 

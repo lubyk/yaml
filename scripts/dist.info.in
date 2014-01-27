@@ -1,0 +1,16 @@
+--- This file is part of Lubyk project
+
+name = "{{lib.type}}"
+version = "{{lib.VERSION}}"
+
+desc = "Very fast yaml parser based on libYAML by Kirill Simonov"
+author = "Andrew Danforth, Gaspard Bucher"
+license = "MIT"
+url = "http://doc.lubyk.org/{{lib.type}}.html"
+maintainer = "Gaspard Bucher"
+
+depends = {
+{% for _, v in ipairs(lib.DEPENDS) do %}
+  "{{v}}",
+{% end %}
+}

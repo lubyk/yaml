@@ -1,0 +1,4 @@
+== 1.0.0 2014-01-26
+
+  * Initial release based on libYAML 0.1.3, Andrew's bindings '0.2'
+  * Added option to 'safe' parse (without loops in tables)

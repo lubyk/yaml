@@ -744,15 +744,24 @@ static int l_null(lua_State *L) {
    return 1;
 }
 
-LUALIB_API int luaopen_yaml_vendor(lua_State *L) {
-   const luaL_reg yamllib[] = {
-      { "load", l_load },
-      { "dump", l_dump },
-      { "configure", l_config },
-      { "null", l_null },
-      { NULL, NULL}
-   };
+const luaL_Reg yaml_functions[] = {
+  { "load", l_load },
+  { "dump", l_dump },
+  { "configure", l_config },
+  { "null", l_null },
+  { NULL, NULL}
+};
 
-   luaL_openlib(L, "yaml", yamllib, 0);
-   return 1;
+LUALIB_API int luaopen_yaml_core(lua_State *L) {
+  lua_newtable(L);
+  // <lib>
+
+#if LUA_VERSION_NUM > 501
+  luaL_setfuncs(L, yaml_functions, 0);
+#else
+  luaL_register(L, NULL, yaml_functions);
+#endif
+
+  // <lib>
+  return 1;
 }
