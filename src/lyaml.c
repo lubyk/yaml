@@ -353,7 +353,8 @@ static int l_load(lua_State *L) {
    struct lua_yaml_loader loader;
    int top = lua_gettop(L);
 
-   luaL_argcheck(L, lua_isstring(L, 1), 1, "must provide a string argument");
+   size_t str_sz;
+   const char *str = luaL_checklstring(L, 1, &str_sz);
 
    loader.L = L;
    if (lua_toboolean(L, 2)) {
@@ -391,8 +392,7 @@ static int l_load(lua_State *L) {
    }
 
    yaml_parser_initialize(&loader.parser);
-   yaml_parser_set_input_string(&loader.parser,
-      (const unsigned char *)lua_tostring(L, 1), lua_strlen(L, 1));
+   yaml_parser_set_input_string(&loader.parser, str, str_sz);
    load(&loader);
 
    delete_event(&loader);
