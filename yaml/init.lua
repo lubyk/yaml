@@ -18,7 +18,7 @@
   
   ## Usage example
 
-    local data = yaml.parse(some_yaml)
+    local data = yaml.load(some_yaml)
 
     local yaml_string = yaml.dump(some_table)
 
@@ -27,7 +27,7 @@ local lub     = require 'lub'
 local core    = require 'yaml.core'
 local lib     = lub.Autoload 'yaml'
 
-local parse, dump = core.load, core.dump
+local load, dump, configure = core.load, core.dump, core.configure
 
 -- Current version respecting [semantic versioning](http://semver.org).
 lib.VERSION = '1.0.0'
@@ -84,24 +84,54 @@ lib.DEPENDS = { -- doc
 
 -- # Class methods
 
--- Parse a `string` containing yaml content and return a table. Uses
--- yaml.Parser internally. If the second argument `safe` is true, the
--- library will not generate aliases in tables.
--- function lib.parse(string, safe)
+-- Parse a `string` containing yaml content and return lua values. If the second
+-- argument `safe` is true, the library will not generate aliases in tables.
+--
+-- Note that if there are more then on value in the YAML content, this function
+-- will return multiple values. Example:
+--
+--   local a, b, c = yaml.load [[
+--   --- 3
+--   --- 4
+--   --- 5
+--   ...
+--   ]]
+--   --> a = 3, b = 4, c = 5
+--
+-- function lib.load(string, safe)
 
 -- nodoc
-lib.parse = parse
+lib.load = load
 
--- Parse the YAML content of the file at `path` and return a lua table. Uses
--- yaml.Parser internally.
-function lib.load(path)
-  return parse(lub.content(path))
+-- Parse the YAML content of the file at `path` and return lua values. Uses
+-- yaml.load internally.
+function lib.loadpath(path)
+  return load(lub.content(path))
 end
 
--- Dump lua content as YAML.
--- function lib.dump(data)
+-- Dump all lua values in the vararg as YAML. Note that when using 'load' on
+-- the produced content, multiple values will be returned.
+-- function lib.dump(...)
 
 -- nodoc
 lib.dump = dump
+
+-- Configure parser. Pass a table setting options to true or false. The default
+-- value is shown in parenthesis.
+--
+-- WARN Please not that this configuration alters parsing globaly and should be
+-- avoided. If such configuration is often needed, please consult the maintainer
+-- so that we can move such configuration inside some Parser object.
+--
+-- + dump_auto_array:           (true)
+-- + dump_error_on_unsupported: (false)
+-- + dump_check_metatables:     (true)
+-- + load_set_metatables:       (true)
+-- + load_numeric_scalars:      (true)
+-- + load_nulls_as_nil:         (false)
+-- function lib.configure(options)
+
+-- nodoc
+lib.configure = configure
 
 return lib
