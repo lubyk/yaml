@@ -50,15 +50,35 @@ lib.DEPENDS = { -- doc
   + array: The table contains an element in index position `1`.
 
   ## Lua
+
+  Some lua code
   
-    TODO
+    local data = {
+      { job = 'Car wash',
+        duration = 1.5,
+        comment = 'The car was really filthy.'
+      },
+      { job = 'Create website',
+        duration = 6.25,
+        comment = 'Using bootstrap template.'
+      }
+    }
+    -- Create a loop
+    data[1].link = data
 
-  ## XML
+  ## YAML
 
-  And the equivalent yaml:
-
-    #txt
-    TODO
+  And the equivalent yaml using `yaml.dump(data)`:
+  
+    #yaml
+    --- &0
+    - link: *0
+      duration: 1.5
+      comment: The car was really filthy.
+      job: Car wash
+    - duration: 6.25
+      comment: Using bootstrap template.
+      job: Create website
 
 --]]------------------------------------------------------
 
