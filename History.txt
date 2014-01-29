@@ -1,7 +1,9 @@
 == 1.0.0
 
-  * Initial release based on libYAML 0.1.3, Andrew's bindings '0.2'
-  * Lua 5.2 compatibility
-  * Added 'yaml.loadpath'
-  * Added option to 'safe' parse (ignores references in yaml)
-  * Fixed number parsing code to not rely on current locale
+  * Initial release based on libYAML 0.1.3, Andrew's bindings '0.2'.
+  * Lua 5.2 compatibility.
+  * Removed external dependency.
+  * Added 'yaml.loadpath', documentation and testing.
+  * Added option to 'safe' parse (ignores references in yaml).
+  * Fixed number parsing code to not rely on current locale.
+  * Continuous integration testing with travis-ci.

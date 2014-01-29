@@ -1,9 +1,9 @@
 --[[------------------------------------------------------
-  # Very fast yaml parser for Lua <a href="https://travis-ci.org/lubyk/yaml"><img src="https://travis-ci.org/lubyk/yaml.png" alt="Build Status"></a> 
+  # YAML parser for Lua <a href="https://travis-ci.org/lubyk/yaml"><img src="https://travis-ci.org/lubyk/yaml.png" alt="Build Status"></a> 
 
   This parser uses [libYAML](http://pyyaml.org/wiki/LibYAML) by Kirill Siminov
   with bindings by Andrew Danforth and some modifications by Gaspard Bucher.
-  libYAML version 0.1.3.
+  libYAML version 0.1.3. LibYAML is generally considered to be the best C YAML 1.1 implementation. 
 
   <html><a href="https://github.com/lubyk/yaml"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a></html>
 
