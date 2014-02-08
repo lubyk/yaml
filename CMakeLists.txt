@@ -44,7 +44,7 @@ add_custom_target(${MODULE_NAME} true)
 set(core "${MODULE_NAME}_core")
 
 include_directories(src)
-  
+
 file(GLOB CORE_SOURCES src/*.c src/bind/dub/*.cpp src/bind/*.cpp src/*.cpp
   src/${PLAT}/*.cpp src/${PLAT}/*.mm)
 
@@ -72,5 +72,5 @@ install(TARGETS ${core}
 #  install                                     
 # --------------------------------------------------------------
 install(DIRECTORY ${MODULE_NAME}
-  DESTINATION ${INSTALL_PATH}/${MODULE_NAME}
+  DESTINATION ${INSTALL_PATH}
 )

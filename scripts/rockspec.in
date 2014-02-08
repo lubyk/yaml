@@ -32,6 +32,7 @@ build = {
     {{string.format("[%-17s] = '%s/%s.lua'", "'"..lib.type..'.'..file.."'", lib.type, file)}},
 {% end %}
 {% end %}
+{% if not def.pure_lua then %}
     -- C module
     {{string.format("[%-17s] = ", "'"..lib.type..".core'")}}{
       sources = {
@@ -49,8 +50,19 @@ build = {
       libraries = {'{{ lub.join(def.libraries, "', '") }}'},
 {% end %}
     },
+{% end %}
   },
-{% if #def.platspec > 0 then %}
+{% if lub.exist(lib.type..'/assets') then %}
+  install = {
+    -- Assets needed by library.
+    lua = {
+{% for path in lub.Dir(lib.type..'/assets'):glob() do %}
+      {{string.format("[%-32s] = '%s'", "'"..string.gsub(string.gsub(path, '%.', '_'), '/', '.').."'", path)}},
+{% end %}
+    },
+  },
+{% end %}
+{% if not def.pure_lua and #def.platspec > 0 then %}
   platforms = {
 {% for _, plat in ipairs(def.platspec) do %}
     {{plat}} = {
