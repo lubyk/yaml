@@ -1,3 +1,4 @@
+{% -- DEFAULT TEMPLATE FOR MODULE WITH C++. Original in lub project. %}
 {% 
 local lfs = require 'lfs'
 local lub = require 'lub'
@@ -9,21 +10,13 @@ source = {
   dir = '{{lib.type}}-REL-{{lib.VERSION}}',
 }
 description = {
-  summary = "Lua YAML serialization using libYAML",
+  summary = "{{def.description.summary}}",
   detailed = [[
-    This module is a Lua binding for Kirill Siminov's excellent LibYAML. LibYAML is generally considered to be the best C YAML 1.1 implementation.
-
-    Main features are:
-     - Fast and easy to use
-     - Based on proven code (libYAML)
-     - Support for table loops
-     - No external dependencies
-
-     Read the documentation at http://doc.lubyk.org/yaml.html.
-  ]],
-  homepage = "http://doc.lubyk.org/{{lib.type}}.html",
-  license = "MIT"
+{{def.description.detailed}}]],
+  homepage = "{{def.description.homepage}}",
+  license = "{{def.description.license}}"
 }
+
 dependencies = {
 {% for _, v in ipairs(lib.DEPENDS) do %}
   "{{v}}",
@@ -39,16 +32,46 @@ build = {
     {{string.format("[%-17s] = '%s/%s.lua'", "'"..lib.type..'.'..file.."'", lib.type, file)}},
 {% end %}
 {% end %}
-    -- C++ modules
+    -- C module
     {{string.format("[%-17s] = ", "'"..lib.type..".core'")}}{
       sources = {
-{% for path in lub.Dir('src'):glob '%.c' do %}
+{% for path in lub.Dir('src'):glob('%.c',0) do %}
+        '{{path}}',
+{% end %}
+{% for path in lub.Dir('src/bind'):glob '%.c' do %}
         '{{path}}',
 {% end %}
       },
-      incdirs = {'src'},
+{% if def.includes and #def.includes > 0 then %}
+      incdirs   = {'{{ lub.join(def.includes, "', '") }}'},
+{% end %}
+{% if def.libraries and #def.libraries > 0 then %}
+      libraries = {'{{ lub.join(def.libraries, "', '") }}'},
+{% end %}
     },
   },
+{% if #def.platspec > 0 then %}
+  platforms = {
+{% for _, plat in ipairs(def.platspec) do %}
+    {{plat}} = {
+      modules = {
+        ['{{lib.type}}.core'] = {
+{% if lub.exist('src/'..plat) then %}
+          sources = {
+{% for path in lub.Dir('src/'..plat):glob '%.c' do %}
+            '{{path}}',
+{% end %}
+          },
+{% end %}
+{% if def.platlibs[plat] then %}
+          libraries = {'{{ lub.join(def.platlibs[plat], "', '") }}'},
+{% end %}
+        },
+      },
+    },
+{% end %}
+  },
+{% end %}
 }
 
 

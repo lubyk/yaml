@@ -5,7 +5,7 @@ source = {
   dir = 'yaml-REL-1.0.0',
 }
 description = {
-  summary = "Lua YAML serialization using libYAML",
+  summary = "Very fast yaml parser based on libYAML by Kirill Simonov",
   detailed = [[
     This module is a Lua binding for Kirill Siminov's excellent LibYAML. LibYAML is generally considered to be the best C YAML 1.1 implementation.
 
@@ -16,10 +16,11 @@ description = {
      - No external dependencies
 
      Read the documentation at http://doc.lubyk.org/yaml.html.
-  ]],
+    ]],
   homepage = "http://doc.lubyk.org/yaml.html",
   license = "MIT"
 }
+
 dependencies = {
   "lua >= 5.1, < 5.3",
   "lub >= 1.0.3, < 1.1",
@@ -29,7 +30,7 @@ build = {
   modules = {
     -- Plain Lua files
     ['yaml'           ] = 'yaml/init.lua',
-    -- C++ modules
+    -- C module
     ['yaml.core'      ] = {
       sources = {
         'src/api.c',
@@ -44,7 +45,7 @@ build = {
         'src/strtod.c',
         'src/writer.c',
       },
-      incdirs = {'src'},
+      incdirs   = {'src'},
     },
   },
 }
