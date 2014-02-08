@@ -6,7 +6,8 @@ version = "1.0.0"
 desc = "Very fast yaml parser based on libYAML by Kirill Simonov"
 author = "Andrew Danforth, Gaspard Bucher"
 license = "MIT"
-url = "http://doc.lubyk.org/yamldef.description.author"
+url = "http://doc.lubyk.org/yaml.html"
+maintainer = "Andrew Danforth, Gaspard Bucher"
 
 depends = {
   "lua >= 5.1, < 5.3",
