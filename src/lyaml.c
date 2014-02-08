@@ -392,7 +392,7 @@ static int l_load(lua_State *L) {
    }
 
    yaml_parser_initialize(&loader.parser);
-   yaml_parser_set_input_string(&loader.parser, str, str_sz);
+   yaml_parser_set_input_string(&loader.parser, (unsigned char*)str, str_sz);
    load(&loader);
 
    delete_event(&loader);
@@ -440,7 +440,9 @@ static int dump_scalar(struct lua_yaml_dumper *dumper) {
    } else if (type == LUA_TNUMBER) {
       /* have Lua convert number to a string */
       str = lua_tolstring(dumper->L, -1, &len);
-   } else if (type == LUA_TBOOLEAN) {
+   } else {
+     // we only arrive in dump_scalar if type is string, boolean or number
+     // type == LUA_TBOOLEAN
       if (lua_toboolean(dumper->L, -1)) {
          str = "true";
          len = 4;
