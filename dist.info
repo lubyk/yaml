@@ -1,7 +1,7 @@
 --- This file is part of Lubyk project
 
 name = "yaml"
-version = "1.0.0"
+version = "1.0.1"
 
 desc = "Very fast yaml parser based on libYAML by Kirill Simonov"
 author = "Andrew Danforth, Gaspard Bucher"

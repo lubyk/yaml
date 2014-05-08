@@ -1,8 +1,8 @@
 package = "yaml"
-version = "1.0.0-1"
+version = "1.0.1-1"
 source = {
-  url = 'https://github.com/lubyk/yaml/archive/REL-1.0.0.tar.gz',
-  dir = 'yaml-REL-1.0.0',
+  url = 'https://github.com/lubyk/yaml/archive/REL-1.0.1.tar.gz',
+  dir = 'yaml-REL-1.0.1',
 }
 description = {
   summary = "Very fast yaml parser based on libYAML by Kirill Simonov",
