@@ -1,3 +1,7 @@
+== 1.1.1 2014-08-15
+
+  * Fixed compilation on linux.
+
 == 1.1.0 2014-08-15
 
   * Added support for sorted table keys on dump.

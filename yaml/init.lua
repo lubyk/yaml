@@ -29,7 +29,7 @@ local lib     = lub.Autoload 'yaml'
 local load, dump, configure = core.load, core.dump, core.configure
 
 -- Current version respecting [semantic versioning](http://semver.org).
-lib.VERSION = '1.1.0'
+lib.VERSION = '1.1.1'
 
 lib.DEPENDS = { -- doc
   -- Compatible with Lua 5.1, 5.2 and LuaJIT
