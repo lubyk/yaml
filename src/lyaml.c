@@ -544,7 +544,8 @@ static int dump_table(struct lua_yaml_dumper *dumper) {
      int keys_tbl = lua_gettop(L);
      lua_pushvalue(L, -2);
      // <tbl> <keys> <tbl>
-     for(int i = 1; i <= key_i; ++i) {
+     int i = 1;
+     for(i = 1; i <= key_i; ++i) {
        lua_rawgeti(L, keys_tbl, i);
        // <tbl> <keys> <tbl> "key"
        if (!dump_node(dumper) || dumper->error)

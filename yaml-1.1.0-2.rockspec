@@ -1,5 +1,5 @@
 package = "yaml"
-version = "1.1.0-1"
+version = "1.1.0-2"
 source = {
   url = 'git://github.com/lubyk/yaml',
   tag = 'REL-1.1.0',
