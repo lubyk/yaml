@@ -29,13 +29,40 @@ local lib     = lub.Autoload 'yaml'
 local load, dump, configure = core.load, core.dump, core.configure
 
 -- Current version respecting [semantic versioning](http://semver.org).
-lib.VERSION = '1.0.1'
+lib.VERSION = '1.1.0'
 
 lib.DEPENDS = { -- doc
   -- Compatible with Lua 5.1, 5.2 and LuaJIT
   'lua >= 5.1, < 5.3',
   -- Uses [Lubyk base library](http://doc.lubyk.org/lub.html)
-  'lub >= 1.0.3, < 1.1',
+  'lub >= 1.0.3, < 2',
+}
+
+-- nodoc
+lib.DESCRIPTION = {
+  summary = "Very fast yaml parser based on libYAML by Kirill Simonov",
+  author  = "Andrew Danforth, Gaspard Bucher",
+  license = "MIT",
+
+  detailed = [[
+  This module is a Lua binding for Kirill Siminov's excellent LibYAML. LibYAML is generally considered to be the best C YAML 1.1 implementation.
+
+  Main features are:
+   - Fast and easy to use
+   - Based on proven code (libYAML)
+   - Support for table loops
+   - No external dependencies
+
+   Read the documentation at http://doc.lubyk.org/yaml.html.
+  ]],
+  homepage = "http://doc.lubyk.org/yaml.html",
+}
+
+-- nodoc
+lib.BUILD = {
+  github = 'lubyk',
+  includes  = {'src'},
+  sources   = {'src/*.c'},
 }
 
 --[[
@@ -118,9 +145,10 @@ lib.dump = dump
 -- Configure parser. Pass a table setting options to true or false. The default
 -- value is shown in parenthesis.
 --
--- WARN Please not that this configuration alters parsing globaly and should be
+-- WARN Please note that this configuration alters parsing globaly and should be
 -- avoided. If such configuration is often needed, please consult the maintainer
--- so that we can move such configuration inside some Parser object.
+-- so that we can move such configuration inside a Parser object instead of
+-- using global settings.
 --
 -- + dump_auto_array:           (true)
 -- + dump_error_on_unsupported: (false)
@@ -128,6 +156,7 @@ lib.dump = dump
 -- + load_set_metatables:       (true)
 -- + load_numeric_scalars:      (true)
 -- + load_nulls_as_nil:         (false)
+-- + sort_table_keys:           (false)
 -- function lib.configure(options)
 
 -- nodoc

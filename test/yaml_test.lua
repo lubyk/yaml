@@ -95,4 +95,55 @@ function should.configure()
   end)
 end
 
+function should.dumpSorted()
+  yaml.configure {
+    sort_table_keys = true,
+  }
+  local x = {
+    dom     = 1,
+    anna    = 2,
+    louis   = 3,
+    bernard = 4,
+    armand  = 5,
+    simon   = 6,
+  }
+  assertEqual([[
+---
+anna: 2
+armand: 5
+bernard: 4
+dom: 1
+louis: 3
+simon: 6
+]], yaml.dump(x))
+
+  yaml.configure {
+    sort_table_keys = false,
+  }
+end
+
+function should.raiseErrorOnNonStringKeysAndSort()
+  yaml.configure {
+    sort_table_keys = true,
+  }
+  local x = {
+    [{}]    = 0,
+    dom     = 1,
+    anna    = 2,
+    louis   = 3,
+    bernard = 4,
+    armand  = 5,
+    simon   = 6,
+  }
+  assertError('Key is not a string: cannot dump with sorted keys.', function()
+    yaml.dump(x)
+  end)
+
+  yaml.configure {
+    sort_table_keys = false,
+  }
+end
+  
+  
+
 should:test()

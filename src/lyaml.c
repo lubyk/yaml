@@ -43,6 +43,9 @@ static char Dump_Check_Metatables = 1;
 static char Load_Set_Metatables = 1;
 static char Load_Numeric_Scalars = 1;
 static char Load_Nulls_As_Nil = 0;
+static char Sort_Table_Keys = 0;
+static int Sort_Table_Keys_idx = 0;
+#define TABLE_SORT_LUA "table.sort(...)"
 
 #define LUAYAML_TAG_PREFIX "tag:yaml.org,2002:"
 
@@ -497,15 +500,84 @@ static int dump_table(struct lua_yaml_dumper *dumper) {
       YAML_BLOCK_MAPPING_STYLE);
    yaml_emitter_emit(&dumper->emitter, &ev);
 
-   lua_pushnil(dumper->L);
-   while (lua_next(dumper->L, -2)) {
-      lua_pushvalue(dumper->L, -2); /* push copy of key on top of stack */
-      if (!dump_node(dumper) || dumper->error)
-         return 0;
-      lua_pop(dumper->L, 1); /* pop copy of key */
-      if (!dump_node(dumper) || dumper->error)
-         return 0;
-      lua_pop(dumper->L, 1);
+   if (Sort_Table_Keys) {
+     /* Sorted table dump */
+     /*
+        local keys = {}
+        for key, _ in pairs(tbl) do
+          table.insert(keys, key)
+        end
+        for _, key in ipairs(keys) do
+        end
+     */
+     lua_State *L = dumper->L;
+     lua_newtable(L);
+     // <tbl> <keys>
+     lua_pushnil(L);
+     // <tbl> <keys> nil
+     int key_i = 0;
+     while (lua_next(L, -3)) {
+       // <tbl> <keys> "key" <value>
+       lua_pop(L, 1);
+       // <tbl> <keys> "key"
+       if (!lua_isstring(L, -1)) {
+         lua_pop(L, 3);
+         lua_pushstring(L, "Key is not a string: cannot dump with sorted keys.");
+         lua_error(L);
+       }
+       lua_pushvalue(L, -1);
+       // <tbl> <keys> "key" "key"
+       key_i = key_i + 1;
+       lua_rawseti(L, -3, key_i);
+       // <tbl> <keys> "key"
+     }
+     // <tbl> <keys>
+
+     // sort keys
+     lua_rawgeti(L, LUA_REGISTRYINDEX, Sort_Table_Keys_idx);
+     // <tbl> <keys> fun
+     lua_pushvalue(L, -2);
+     // <tbl> <keys> fun <keys>
+     lua_call(L, 1, 0);
+     // <tbl> <keys>
+
+     int keys_tbl = lua_gettop(L);
+     lua_pushvalue(L, -2);
+     // <tbl> <keys> <tbl>
+     for(int i = 1; i <= key_i; ++i) {
+       lua_rawgeti(L, keys_tbl, i);
+       // <tbl> <keys> <tbl> "key"
+       if (!dump_node(dumper) || dumper->error)
+          return 0;
+       lua_rawget(L, -2);
+       // <tbl> <keys> <tbl> <value>
+       if (!dump_node(dumper) || dumper->error)
+          return 0;
+       // <tbl> <keys> <tbl> <value>
+       lua_pop(L, 1);
+       // <tbl> <keys> <tbl>
+     }
+     lua_pop(L, 2);
+     // <tbl>
+   } else {
+     // do not sort keys
+     lua_pushnil(dumper->L);
+     while (lua_next(dumper->L, -2)) {
+        // <tbl> "key" <value>
+        lua_pushvalue(dumper->L, -2); /* push copy of key on top of stack */
+        // <tbl> "key" <value> "key"
+        if (!dump_node(dumper) || dumper->error)
+           return 0;
+        // <tbl> "key" <value> "key"
+        lua_pop(dumper->L, 1); /* pop copy of key */
+        // <tbl> "key" <value>
+        if (!dump_node(dumper) || dumper->error)
+           return 0;
+        // <tbl> "key" <value>
+        lua_pop(dumper->L, 1);
+        // <tbl> "key"
+     }
+     // <tbl>
    }
 
    yaml_mapping_end_event_initialize(&ev);
@@ -718,6 +790,7 @@ static int handle_config_option(lua_State *L) {
       { "load_set_metatables", &Load_Set_Metatables },
       { "load_numeric_scalars", &Load_Numeric_Scalars },
       { "load_nulls_as_nil", &Load_Nulls_As_Nil },
+      { "sort_table_keys", &Sort_Table_Keys },
       { NULL, NULL }
    };
 
@@ -745,6 +818,14 @@ static int l_config(lua_State *L) {
       while (lua_next(L, -2) != 0) {
          handle_config_option(L);
          lua_pop(L, 2);
+      }
+      if (Sort_Table_Keys) {
+        // prepare sort function
+        if (luaL_loadbuffer(L, TABLE_SORT_LUA, strlen(TABLE_SORT_LUA), "table sort function")) {
+          lua_error(L);
+        }
+        // <fun>
+        Sort_Table_Keys_idx = luaL_ref(L, LUA_REGISTRYINDEX);
       }
       return 0;
    }
