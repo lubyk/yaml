@@ -1,5 +1,5 @@
 name = "yaml"
-version = "1.1.1"
+version = "1.1.2"
 
 desc = "Very fast yaml parser based on libYAML by Kirill Simonov"
 author = "Andrew Danforth, Gaspard Bucher"
@@ -8,7 +8,7 @@ url = "http://doc.lubyk.org/yaml.html"
 maintainer = "Andrew Danforth, Gaspard Bucher"
 
 depends = {
-  "lua >= 5.1, < 5.3",
+  "lua >= 5.1, < 5.4",
   "lub >= 1.0.3, < 2",
 }
 
